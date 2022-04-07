@@ -1,0 +1,33 @@
+cabal-version:      2.4
+name:               mathematics-for-industries
+version:            0.1.0.0
+
+synopsis: A dynamic program that solves the OJA-problem with memory constraints.
+
+description: This is a simplified version of the implementation of the
+             dynamic program we made for the couse "Mathematics for Industries"
+             at the University of Utrecht.
+
+-- A URL where users can report bugs.
+-- bug-reports:
+
+-- The license under which the package is released.
+-- license:
+author:             Roel Hemerik
+maintainer:         ik@roelweb.com
+
+-- A copyright notice.
+-- copyright:
+-- category:
+extra-source-files: CHANGELOG.md
+
+library
+    exposed-modules: Lib, Common, Types, DP
+    build-depends:    base ^>=4.14.3.0
+                    , lens
+                    , generic-lens
+                    , prettyprinter
+                    , data-default
+                    , comonad
+    hs-source-dirs:   src
+    default-language: Haskell2010
