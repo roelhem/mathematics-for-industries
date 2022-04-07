@@ -126,10 +126,22 @@ with the memory constraint reduces by `1400`:
 let x = exampleB !<! Fin 2000 =>> tfix
 
 -- Changing the `Store`-monad using the convenient functions.
-let x' = (addCost 1400 . seekIx 2...4) x
+let x' = (addCost 1400 . seekIx (2...4)) x
 
 -- Retrieve the sub-result using the normal `extract` function.
-extract x'
+pretty $ extract x'
+```
+
+Results in:
+
+```
+------ QUERYABLE ------
+    Input: F: 1024-|4096|->512-|2048|->256-|1024|->128-|512|->64-|256|->32-|128|->16-|64|->8-|32|->4-|16|->2-|8|->1 < 2000
+    Query: 2...4 < 600
+    Value:
+        (T (T (T I)))
+            fma= 1835008
+            mem= 512
 ```
 
 **IMPORTANT:** Use the `tfix` operator, as `wfix` needs to re-evaluate
@@ -148,6 +160,26 @@ pretty $ exampleA !<! Inf =>> wfix
 
 -- Pretty-prints the sub-result where the memory-constraint is set to 20:
 pretty $ seekMemConstr (Fin 20) $ exampleA !<! Inf =>> tfix
+```
+
+Results in:
+
+```
+------ QUERYABLE ------
+    Input: F: 8-|16|->4-|16|->1 < ∞
+    Query: 1...2 < ∞
+    Value:
+        ((I A) A)
+            fma= 32
+            mem= 33
+
+------ QUERYABLE ------
+    Input: F: 8-|16|->4-|16|->1 < ∞
+    Query: 1...2 < 20
+    Value:
+        ((T I) × (T I))
+            fma= 224
+            mem= 12
 ```
 
 Both the `DP`- and `Types`-modules have their pretty-print instances defined
