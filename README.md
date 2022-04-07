@@ -32,27 +32,27 @@ cabal repl
 The easiest way to build a function composition that can be used as an input
 is to use the helper function:
 
-```{haskell}
+```{Haskell}
 zipF :: [Nat] -> [Nat] -> [F]
 ```
 where the first list should contain the dimensions and the second list the
 amount of edges in the execution-graph of that function.
 
-```{haskell}
+```{Haskell}
 exampleA = zipF [8,4,1] [16,16]
 ```
 
 You might also use list-comprehensions and the normal constructors to generate
 more complex inputs like:
 
-```{haskell}
+```{Haskell}
 exampleB = [F ((2^x) :-> (2^(x-1))) (2^(x+2)) | x <- [10,9..1]]
 ```
 
 To convert a function compositions (List of functions, type=`[F]`) to the input
 of a dynamic program, you can use the infix operator `!<!`
 
-```{haskell}
+```{Haskell}
 (!<!) :: (FuncComp a, MemConstraint b) => a -> b -> Queryable DP
 ```
 
@@ -63,7 +63,7 @@ You can give the value of the memory constraint `memc` by the `Fin memc`, to
 only allow bracketing that use less than `memc` memory. You can also set this
 value to `Inf` if you want a dynamic program that has no memory constraints:
 
-```{haskell}
+```{Haskell}
 dpA = exampleA !<! Inf      -- No memory constraints.
 dpB = exampleB !<! Fin 2000 -- Only solutions that use less than 2000 memory.
 ```
@@ -73,7 +73,7 @@ dpB = exampleB !<! Fin 2000 -- Only solutions that use less than 2000 memory.
 To find a fix point, you can use the standard function `wfix` from the `comonad`
 library:
 
-```{haskell}
+```{Haskell}
 wfix $ exampleA !<! Inf
 ```
 
@@ -84,7 +84,7 @@ We also implemented a faster function called `tfix` that uses a table of linked
 lists. This implementation evaluates a sub-problem at most 1 on time, and is
 therefore a lot faster than the more general one.
 
-```{haskell}
+```{Haskell}
 tfix $ exampleB !<! Fin 2000
 ```
 
@@ -97,7 +97,7 @@ in the `DP`-module). You can use this to your advantage if you want to see the
 results of the sub-problems by extending the dynamic program using one of the
 fix-point operators:
 
-```{haskell}
+```{Haskell}
 let x = exampleB !<! Fin 2000 =>> tfix :: Queryable DPResult
 ```
 
@@ -105,7 +105,7 @@ Besides the standard operations of a `Store`-comonad (a co-`State` monad)
 operations found in the `comonad` library, you can also use one of the following
 derived functions that are a bit more convenient to use:
 
-```{haskell}
+```{Haskell}
 -- | Sets the memory constraint of the sub-problem position.
 seekMemConstr :: MemConstraint a => a -> Queryable b -> Queryable b
 
@@ -121,7 +121,7 @@ Afterwards, you can use `extract` to retrieve the value from the comonad.
 The following example gives the sub-result of the sub-problem _F_4 * F_3 * F_2_
 with the memory constraint reduces by `1400`:
 
-```{haskell}
+```{Haskell}
 -- Making an extended queryable object using the `tfix`-operator.
 let x = exampleB !<! Fin 2000 =>> tfix
 
@@ -141,7 +141,7 @@ For most of the `Show`-able types, we also defined a pretty-print function to
 make the results more readable. You can use this feature by prefixing a line
 in `ghci` with `pretty $`.
 
-```{haskell}
+```{Haskell}
 -- Pretty-prints the result of `exampleA`, including the positional data from
 -- the `Queryable` comonad.
 pretty $ exampleA !<! Inf =>> wfix
